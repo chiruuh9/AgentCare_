@@ -25,10 +25,16 @@ app = FastAPI(
 # Add Audit Logging Middleware
 app.add_middleware(AuditLoggingMiddleware)
 
-# Set up CORS middleware for frontend communication
+# CORS: allow local dev + the Vercel production frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+        "https://agent-care-diabetes.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -56,4 +62,24 @@ def health_check():
         "status": "ok",
         "service": "AgentCare Backend",
         "disclaimer": SAFETY_DISCLAIMER,
+    }
+
+
+# ---------------------------------------------------------------
+# TEMPORARY ENDPOINT for seeding production DB on Render Free tier.
+# REMOVE THIS after seeding (security: it can be called by anyone).
+# ---------------------------------------------------------------
+@app.get("/seed-now")
+def seed_now():
+    import subprocess
+    result = subprocess.run(
+        ["python", "seed_data.py"],
+        capture_output=True,
+        text=True,
+        cwd=".",  # run in backend root
+    )
+    return {
+        "returncode": result.returncode,
+        "stdout": result.stdout,
+        "stderr": result.stderr,
     }
