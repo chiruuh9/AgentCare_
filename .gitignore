@@ -1,0 +1,38 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.vite/
+npm-debug.log*
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite3
+agentcare.db
+
+# Uploads
+backend/uploads/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
